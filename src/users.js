@@ -1,29 +1,14 @@
-import Db from '../lib/mysqldb.js';
+import Db from './lib/mysqldb.js';
 
-class users {
-
-    static async insert(values) {
-        if (values.userId == null || values.name == null) {
-
-        }
-
-        try {
-
-            const [result] = await Db.query('Insert Into user Set ?', [values]);
-            return result.insertId;
-
-        } catch (e) {
-
-        }
-    }
+class users {    
 
     static async postUsers(ctx) {
 
-        ctx.request.body = await castBoolean.fromStrings('user', ctx.request.body);
+        let sql = 'Insert Into user Set ?';
+        let values= ctx.request.body;
+        const [result] = await Db.query(sql, [values]);
 
-        const id = await Member.insert(ctx.request.body);
-
-        ctx.response.body = await Member.get(id); // return created member details
+        ctx.response.body = result.insertId; // return created member details
         ctx.response.status = 201; // Created
     }
 }

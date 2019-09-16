@@ -2,7 +2,7 @@
 /* Manage MySQL database connections.                                                             */
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
-const mysql = require('mysql2');
+import mysql from 'mysql2/promise.js';
 
 let connectionPool = null;
 
