@@ -8,6 +8,7 @@ const router = new Router();
 
 
 router.post('/users', Users.postUsers);
+router.post('/users/:userId/relations', Users.postRelations);
 
 router.get('/*', async (ctx) => {
     ctx.body = "Hi Word";
