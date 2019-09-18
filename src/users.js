@@ -17,6 +17,7 @@ class users {
         const userId = ctx.params.userId;
         let friendId = ctx.request.body.friendId;
 
+
         let sql = 'Insert Into userrelation Set ?';
         let values = { userId: userId, watchId: friendId, relation: 0 }
 
@@ -26,9 +27,36 @@ class users {
         let selectSql = 'Select id from userrelation where userId=:userId and watchId=:watchId';
         [result] = await Db.query(selectSql, { userId: friendId, watchId: userId });
         if (result != null && result[0] != null && result[0].id) {
-            const updateSql = 'UPDATE userrelation SET relation=1 WHERE id in(?,?)';
-            Db.query(updateSql, [insertId, result[0].id]);
+            const updateSql = 'UPDATE userrelation SET relation=1 WHERE id=? OR id=?';
+            await Db.query(updateSql, [insertId, result[0].id]);
         }
+
+
+        /*
+        const db = await Db.connect();
+        await db.beginTransaction();
+        let result;
+        let result2;
+        try {
+            let sql = 'Insert Into userrelation Set ?'
+            let values = { userId: userId, watchId: friendId, relation: 0 }
+            let sql2 = 'Select id from userrelation where userId=:userId and watchId=:watchId';
+            result = await db.query(sql, [values]);
+            result2 = await db.query(sql2, { userId: friendId, watchId: userId });
+            await db.commit();
+        } catch (e) {
+            await db.rollback();
+            throw e;
+        }
+
+        const insertId = result[0].insertId;
+        if (result2 != null && result2[0][0] != null && result2[0][0].id) {
+            const updateSql = 'UPDATE userrelation SET relation=1 WHERE id=? OR id=?';
+            await db.query(updateSql, [insertId, result2[0][0].id]);
+        }
+        db.release();
+        */
+
 
         ctx.response.body = "ok";
         ctx.response.status = 200;
@@ -50,11 +78,27 @@ class users {
         const userId = ctx.params.userId;
         const friendId = ctx.params.friendId;
 
-        let sql = 'DELETE FROM userrelation WHERE userId=? AND watchId=?';
-        const [result] = await Db.query(sql, [userId, friendId]);
+        const db = await Db.connect();
+        await db.beginTransaction();
+        try {
+            let sql = 'DELETE FROM userrelation WHERE userId=? AND watchId=?';
+            let sql2 = 'UPDATE userrelation SET relation=0 WHERE userId=? AND watchId=?';
+            await db.query(sql, [userId, friendId]);
+            await db.query(sql2, [friendId, userId]);
+            await db.commit();
+        } catch (e) {
+            await db.rollback();
+            throw e;
+        }
+        db.release();
 
-        sql = 'UPDATE userrelation SET relation=0 WHERE userId=? AND watchId=?';
-        Db.query(sql, [friendId, userId]);
+        /*
+         let sql = 'DELETE FROM userrelation WHERE userId=? AND watchId=?';
+         const [result] = await Db.query(sql, [userId, friendId]);
+ 
+         sql = 'UPDATE userrelation SET relation=0 WHERE userId=? AND watchId=?';
+         Db.query(sql, [friendId, userId]);
+        */
 
         ctx.response.body = "ok";
         ctx.response.status = 200; //
