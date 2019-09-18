@@ -83,10 +83,10 @@ class users {
         const userId = ctx.params.userId;
         const lastId = ctx.query.lastId;
 
-        let sql = 'SELECT * FROM `user` WHERE userId=?';
-        const [result] = await Db.query(sql, userId);
+        let sql = 'call getStreams(?,?)';
+        const [result] = await Db.query(sql, [userId,lastId]);
 
-        ctx.response.body = { "data": lastId, "data2": userId };
+        ctx.response.body = { "data": result[0] };
         ctx.response.status = 200; //
     }
 }
