@@ -7,6 +7,14 @@ const app = new Koa();
 const router = new Router();
 
 
+router.get('/ready', async (ctx) => {
+    ctx.body = {
+        "data": "ok"
+    };
+})
+router.post('/initialize', async (ctx) => {
+    ctx.body = "ok";
+})
 router.post('/users', Users.postUsers);
 router.post('/users/:userId/relations', Users.postRelations);
 router.post('/users/:userId/moments', Users.postMoments);
