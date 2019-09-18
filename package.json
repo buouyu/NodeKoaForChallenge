@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Minimal set of code to write a GraphQL server with Apollo graphql-tools",
   "scripts": {
-    "start": "nodemon ./src/index.js --exec babel-node",
+    "start": "nodemon ./src/servers.js --exec babel-node",
     "lint": "eslint ."
   },
   "keywords": [
@@ -29,7 +29,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
     "chai": "^4.1.2",
-    "eslint": "^2.4.0",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb": "^6.1.0",
     "eslint-plugin-import": "^1.1.0",
     "eslint-plugin-react": "^4.2.3",
